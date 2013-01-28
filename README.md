@@ -54,7 +54,7 @@ http://blog.7thdomain.com/2012/10/06/configuring-outlook-mac-2011-auto-archive-s
 Change Log
 ==========
 
-[Ver 2.2.0]: 2012/12/08
+2012/12/08 - Ver 2.2.0: 
 
 - If you create a category in Outlook called “Do No Archive” there is a setting in the script that will now ignore any mails or calendar items assigned to this category even if they are candidates for archiving
 
