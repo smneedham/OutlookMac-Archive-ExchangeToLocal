@@ -5,7 +5,7 @@ Out the box Microsoft Outlook for Mac 2011 has no equivalent tool to the auto ar
 
 Original author: Michael Needham (blog.7thdomain.com)
 
-Thanks to the community on my blog (and in the future github) for feedback, ideas and contributions 
+Thanks to the community on my blog/github for feedback, ideas and contributions 
 
 
 To download the latest release go to: https://github.com/smneedham/OutlookMac-Archive-ExchangeToLocal/tree/master/download
