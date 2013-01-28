@@ -29,7 +29,9 @@ After messing with Outlook Rules and finding them very weak it looked like the o
 - A script which by default will archive mail from your primary exchange account using the following default archive settings:
 
   -Archive mail older than 80 days from all folders (except folders like ‘Subscribed Public Folders’, ‘Junk Mail’, ‘Deleted Items’, etc)
+  
   -All archived mail folders will be placed under the folder of ‘On My Computer’ called ’Archive Mail’
+  
   -All non-recurring calendar items older then 2 years will be archived to a calendar of ‘On My Computer’ called ‘Archive Calendar’
 
 - The script has a number of parameters which you can change if you are not happy with the default settings.  
@@ -41,6 +43,7 @@ After messing with Outlook Rules and finding them very weak it looked like the o
 For detail on configuring the script and other instructions see the following blog posts:
 
 http://blog.7thdomain.com/2012/09/03/auto-archive-script-for-outlook-mac-2011/
+
 http://blog.7thdomain.com/2012/10/06/configuring-outlook-mac-2011-auto-archive-script/
 
 
