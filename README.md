@@ -3,15 +3,15 @@ Auto Archive Apple Script for Outlook Mac 2011
 
 Out the box Microsoft Outlook for Mac 2011 has no equivalent tool to the auto archive functionality found in Outlook for Windows. This script addresses that by offering close to all the functionality available in Windows
 
-Original author: Michael Needham (http://blog.7thdomain.com)
+Original author: [Michael Needham](http://blog.7thdomain.com)
 
 Thanks to the community on my blog/github for feedback, ideas and contributions 
 
 
-To download, select the version you want from below URL and then download the .scpt file from the 'download' folder of that release:
+To [download](https://github.com/smneedham/OutlookMac-Archive-ExchangeToLocal/tags), select the version you want from the drop down then download the .scpt file from the 'download' folder of that release
 
 
-https://github.com/smneedham/OutlookMac-Archive-ExchangeToLocal/tags  
+  
 
 
 
