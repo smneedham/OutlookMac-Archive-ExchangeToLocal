@@ -8,7 +8,7 @@ Original author: Michael Needham (http://blog.7thdomain.com)
 Thanks to the community on my blog/github for feedback, ideas and contributions 
 
 
-To download select the version you want from below URL and then download the .scpt file from the 'download' folder of that release:
+To download, select the version you want from below URL and then download the .scpt file from the 'download' folder of that release:
 
 
 https://github.com/smneedham/OutlookMac-Archive-ExchangeToLocal/tags  
