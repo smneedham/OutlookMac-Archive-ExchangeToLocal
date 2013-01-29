@@ -8,7 +8,10 @@ Original author: Michael Needham (http://blog.7thdomain.com)
 Thanks to the community on my blog/github for feedback, ideas and contributions 
 
 
-To download the latest release go to: https://github.com/smneedham/OutlookMac-Archive-ExchangeToLocal/tree/master/download
+To download the latest beta release in progress go to: https://github.com/smneedham/OutlookMac-Archive-ExchangeToLocal/tree/master/download
+
+To download a stable versions got to: https://github.com/smneedham/OutlookMac-Archive-ExchangeToLocal/tags  ,and select the version you wish to download   
+
 
 
 Background:
