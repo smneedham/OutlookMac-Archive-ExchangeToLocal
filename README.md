@@ -8,7 +8,7 @@ Original author: [Michael Needham](http://blog.7thdomain.com)
 Thanks to the community on my blog/github for feedback, ideas and contributions 
 
 
-To [download](https://github.com/smneedham/OutlookMac-Archive-ExchangeToLocal/tags), select the version you want from the drop down then download the .scpt file from the 'download' folder of that release
+To [download](https://github.com/smneedham/OutlookMac-Archive-ExchangeToLocal/tags), select the 'Browse Code' button from the list of available versions. Download the .scpt file from the 'download' folder of that release
 
 
   
