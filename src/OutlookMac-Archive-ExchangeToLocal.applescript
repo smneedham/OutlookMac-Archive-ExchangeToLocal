@@ -1,19 +1,19 @@
 (*
-	-- ========== Outlook Mac 2011 Archive Script to local folders 2.2.0 =============
+	-- ========== Outlook Mac 2011 Archive Script to local folders 2.3.0 =============
 	
 	Author: 		Michael Needham Oct 2012, blog.7thdomain.com/2012/09/03/auto-archive-script-for-outlook-mac-2011/ (feedback/suggestions welcome)
 	
 	Details:
 	 			Mail:
 				-----
-				- Script to auto archive a full folder structure from the default (or nominated) exchange account to local 'on my computer' root folder
+				- Script to auto archive a full folder structure from the default (or nominated) Mail account to local 'on my computer' root folder
 	 			- Set parameteres in 'Global Settings' section below, before running script
 				- Script can be run manually from AppleScript Editor which is useful if you want to review the debug event log (click twice on the "Events" button above the logging window to see log output), however...
 				- It's also recommended you schedule the script from Outlook's 'Run Schedule' tool to execute on a regular basis (daily recommended)
 				
 				Calendar:
 				---------
-				- Script also archives calendar events from the nominated exchange account to local 'on my computer' archive calendar
+				- Script also archives calendar events from the nominated mail account to local 'on my computer' archive calendar
 	 			- Set parameteres in global settings section below before running script 
 
 
@@ -27,8 +27,8 @@ tell application "Microsoft Outlook"
 	-- Global Settings which you can change if required ---------------------------------------------------------------------------------------------------------------------------
 	
 	-- General	
-	set exchangeAccountDescription to "<exchange account>" -- By default you don't have to change this to your account name as the script will attempt to auto detect the primary account. However, if you have multiple accounts then you set this to the greyed out name of your Exchange Account in the main Outlook window holding all your folders (Inbox etc)
-	set runInSimulationMode to false -- when set to true no mail or calendar events will be archived. It will however create the appropriate folder structures under 'On My Computer' and the candidate items that will be archived will be logged to the events window for you to review. The script can be run repeatedly to test out the effect off different parameters below. You can also optionally delete the empty folders that were created from running in this mode if you want to re-run the simulation
+	set mailAccountDescription to "<mail account>" -- By default you don't have to change this to your account name as the script will attempt to auto detect the primary account. However, if you have multiple accounts then you set this to the greyed out name of your mail Account in the main Outlook window holding all your folders (Inbox etc)
+	set runInSimulationMode to true -- when set to true no mail or calendar events will be archived. It will however create the appropriate folder structures under 'On My Computer' and the candidate items that will be archived will be logged to the events window for you to review. The script can be run repeatedly to test out the effect off different parameters below. You can also optionally delete the empty folders that were created from running in this mode if you want to re-run the simulation
 	set minutesBeforeTimeOut to 2 -- When first running this script against a very large mailbox (one user had 150 000 mails in one folder to archive, for example), it can take the script a long time to build the arrays necessary for calculating the items to be archived. By default AppleScript will timeout quite quickly if it feels an application is taking too long to respond. This timeout value overrides that to allow it handle the long processing times. You can make it longer if you still experience timeouts (CPU dependent).  In extreme large cases an alterntive is to manually drag down mail to your archive and then allow the script to keep the archive up to date from there.
 	set processingDelay to 0.2 -- The number of milliseconds to wait between moving messages on Outlook. On slower machines Outlook can't handle the speed at which the script requests mail to be moved sometimes causing a lock-up. It also makes Outlook more responsive while running in the background. 
 	set doNotArchiveCategoryName to "Do Not Archive" -- If you create an Outlook category that has this exact name (case sensitive) and assign that category to messages or calendar events the archiving process will skip those items indefinitely
@@ -36,9 +36,9 @@ tell application "Microsoft Outlook"
 	
 	-- Mail Archive parameters
 	set archiveMailItems to true -- no mail archiving will take place if set to false
-	set daysBeforeMailArchive to 80 -- number of days to keep mail in your exchange account before archiving
-	set localMailArchiveRootFolderName to "Archive Mail" -- name of the root archive mail folder to create under 'On My Computer'. If an existing archive mail folder is found it will use it, otherwise it will create the folder for you
-	set excludedMailFoldersList to {"Subscribed Public Folders", "Junk E-mail", "Deleted Items", "Sync Issues", "quarantine", "Conversation History"} -- list of mail folders in your exchange account to exclude (sub-folders will also be excluded).
+	set daysBeforeMailArchive to 80 -- number of days to keep mail in your mail account before archiving
+	set localMailArchiveRootFolderName to "Archive Mail" -- name of the root archive mail folder to create under 'On My Computer'. If an existing archive mail folder is found it will use it, otherwise it will create the folder for you. Your inbox, sent items etc will appear under this folder
+	set excludedMailFoldersList to {"Subscribed Public Folders", "Junk E-mail", "Deleted Items", "Sync Issues", "quarantine", "Conversation History"} -- list of mail folders in your mail account to exclude (sub-folders will also be excluded).
 	set processSubFoldersofExcludedFolders to false -- By setting to true subfolders will be archived even though the parent folder is excluded for all excluded folders in above list (e.g. excluding your inbox but allowing it's sub-folders to be archived). Note that in this mode, folders with the repeated same name in your folder tree hierarchy will be all excluded if included in the excluded list.
 	set doNotArchiveInCompleteTodoItems to false -- If set to true then archiving will ignore all items that are marked with a todo flag but are not complete (including items with no due date which are by definition always incomplete)
 	
@@ -47,7 +47,7 @@ tell application "Microsoft Outlook"
 	-- Calendar Archive parameters
 	set archiveCalendarItems to true -- no calendar archiving will take place if set to false
 	set localArchiveCalendarName to "Archive Calendar" -- name of the archive calendar to create under 'On My Computer'. If an existing calendar is found it will use it, otherwise it will create the calendar for you
-	set daysBeforeCalendarArchive to 730 -- number of days to keep non-recurring calendar events in your exchange account before archiving
+	set daysBeforeCalendarArchive to 730 -- number of days to keep non-recurring calendar events in your mail account before archiving
 	set archiveReccuringEvents to false -- If you wish to also archive recurring events then set this to true. Warning: if a recurring event is moved to the archive it will remove the entire series from your calendar even if those recurrances are present today 
 	
 	--End Global Settings  (do not modify parameters or code beyond this line unless you know what you are doing) ---------------------------------------------------
@@ -55,9 +55,9 @@ tell application "Microsoft Outlook"
 	
 	
 	
-	--set exchange account (if none specified then use the first account found if it's not a delegated or other users folder account)
-	if exchangeAccountDescription is "<exchange account>" then
-		set exchangeAccount to item 1 of exchange accounts
+	--set mail account (if none specified then use the first account found if it's not a delegated or other users folder account)
+	if mailAccountDescription is "<mail account>" then
+		set mailAccount to item 1 of exchange accounts
 		if exchange type of exchangeAccount is not primary account then
 			error "Please set an exchange account which is not delegated or another users folder account"
 		end if
@@ -73,19 +73,19 @@ tell application "Microsoft Outlook"
 	if archiveMailItems then
 		log "Processing mail folders"
 		-- Run archive process to local folders
-		my archiveExchangeFolders(mail folders of exchangeAccount, excludedMailFoldersList, my createMailArchiveFolder(localMailArchiveRootFolderName, on my computer), daysBeforeMailArchive)
+		my archiveMailFolders(mail folders of mailAccount, excludedMailFoldersList, my createMailArchiveFolder(localMailArchiveRootFolderName, on my computer), daysBeforeMailArchive)
 	end if
 	
 	log "================== Calendar ==================="
 	
 	-- Archive Calendar Events if required
 	if archiveCalendarItems then
-		-- select default exchange calendar
-		set defaultExchangeCalendar to default calendar of exchangeAccount
-		log ("Processing " & name of exchangeAccount as text) & "'s primary calendar: " & (name of defaultExchangeCalendar as text)
+		-- select default  calendar
+		set defaultCalendar to default calendar of mailAccount
+		log ("Processing " & name of mailAccount as text) & "'s primary calendar: " & (name of defaultCalendar as text)
 		
 		-- Move all non-recurring events to archive calendar that exceed the period of days from current date		
-		my archiveCalendarEvents(defaultExchangeCalendar, my createLocalArchiveCalendar(localArchiveCalendarName), daysBeforeCalendarArchive)
+		my archiveCalendarEvents(defaultCalendar, my createLocalArchiveCalendar(localArchiveCalendarName), daysBeforeCalendarArchive)
 	end if
 	
 	log "Done!"
@@ -94,17 +94,17 @@ end tell
 
 (*================= Mail Archiving ================*)
 
--- Recursively archive the tree of exchange folders (but ignoring the excluded folders)
-on archiveExchangeFolders(exchangeFolders, excludedFolders, archiveRootFolder, daysBeforeArchive)
+-- Recursively archive the tree of mail folders (but ignoring the excluded folders)
+on archiveMailFolders(mailFolders, excludedFolders, archiveRootFolder, daysBeforeArchive)
 	
 	tell application "Microsoft Outlook"
 		
-		-- Calculate the earliest date of mail that must remain on exchange server
+		-- Calculate the earliest date of mail that must remain on mail server
 		set earliestDate to ((current date) - (daysBeforeArchive * days))
 		log "Earliest Date - " & earliestDate
 		
 		
-		repeat with mailFolder in exchangeFolders
+		repeat with mailFolder in mailFolders
 			set mailFolderName to name of mailFolder as text
 			
 			set mailFolderExcluded to (mailFolderName) is in excludedFolders
@@ -128,7 +128,7 @@ on archiveExchangeFolders(exchangeFolders, excludedFolders, archiveRootFolder, d
 				-- recurse sub-folders
 				if subFoldersExist then
 					log mailFolderName & " has sub-folders"
-					my archiveExchangeFolders(mail folders in mailFolder, excludedFolders, currentArchiveFolder, daysBeforeArchive)
+					my archiveMailFolders(mail folders in mailFolder, excludedFolders, currentArchiveFolder, daysBeforeArchive)
 				end if
 			else
 				log mailFolderName & " and sub-folders excluded"
@@ -137,7 +137,7 @@ on archiveExchangeFolders(exchangeFolders, excludedFolders, archiveRootFolder, d
 		end repeat
 		
 	end tell
-end archiveExchangeFolders
+end archiveMailFolders
 
 -- Create Local Mail Archive Folder unless it exists already
 -- Returns the created/found folder
@@ -158,14 +158,14 @@ on createMailArchiveFolder(mailFolderName, archiveRootFolder)
 	end tell
 end createMailArchiveFolder
 
--- Archive mail from exchange folder to Mail Archive folder but only if older than earliestDate
+-- Archive mail from mail folder to Mail Archive folder but only if older than earliestDate
 on archiveMail(mailFolder, currentArchiveFolder, earliestDate)
 	tell application "Microsoft Outlook"
 		with timeout of (my minutesBeforeTimeOut) * 60 seconds
 			
-			set exchangeMessages to messages of mailFolder
-			repeat with theIncrementValue from 1 to count of exchangeMessages
-				set theMessage to item theIncrementValue of exchangeMessages
+			set mailMessages to messages of mailFolder
+			repeat with theIncrementValue from 1 to count of mailMessages
+				set theMessage to item theIncrementValue of mailMessages
 				
 				if time sent of theMessage is less than earliestDate then
 					
@@ -197,17 +197,17 @@ end archiveMail
 (*================= Calendar Archiving ================*)
 
 -- Archive all non-recurring events
-on archiveCalendarEvents(exchangeCalendar, localArchiveCalendar, daysBeforeCalendarArchive)
+on archiveCalendarEvents(accountCalendar, localArchiveCalendar, daysBeforeCalendarArchive)
 	
 	tell application "Microsoft Outlook"
 		with timeout of (my minutesBeforeTimeOut) * 60 seconds
 			
 			
-			-- Calculate the earliest date of calendar events that must remain on exchange server
+			-- Calculate the earliest date of calendar events that must remain on account server
 			set earliestDate to ((current date) - (daysBeforeCalendarArchive * days))
 			log "Earliest Date - " & earliestDate
 			
-			repeat with calendarEvent in calendar events of exchangeCalendar
+			repeat with calendarEvent in calendar events of accountCalendar
 				-- repeat starts with oldest event
 				if end time of calendarEvent is less than earliestDate then
 					if is recurring of calendarEvent is false and is occurrence of calendarEvent is false or my archiveReccuringEvents is true then
